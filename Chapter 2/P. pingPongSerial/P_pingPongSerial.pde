@@ -1,16 +1,12 @@
 import processing.serial.*;
 
-//float rightPaddle, leftPaddle;
+//Paddle Values
 int serve, reset;
 int rightPaddleX, leftPaddleX;
 float rightPaddleY, leftPaddleY;
 
-
 int paddleHeight = 50;
 int paddleWidth = 10;
-
-Serial port;
-String result;
 
 float rightMin = 200;
 float rightMax = 700;
@@ -19,23 +15,55 @@ float leftMin = 200;
 float leftMax = 700;
 
 
+// Ball Values
+int ballSize = 10;
+
+int ballXDir = 1;
+int ballYDir = 1;
+
+int ballXPos, ballYPos;
+
+boolean ballInMotion = false;
+
+
+// Player Values
+int player1 = 0;
+int player2 = 0;
+
+
+// Port Values
+Serial port;
+String result;
+
+
 void setup() {
- size(640, 480);
- 
- println(Serial.list());
- 
- String portName = Serial.list()[0];
- 
- port = new Serial (this, portName, 115200);
- port.bufferUntil('\n');
- 
- leftPaddleY = height/2;
- rightPaddleY = height/2;
- serve = 0;
- reset = 0;
- 
- rightPaddleX = width - 50;
- leftPaddleX = 50;
+   // Creating window
+   size(640, 480);
+   
+   // Initialising port
+   println(Serial.list());
+   
+   String portName = Serial.list()[0];
+   
+   port = new Serial (this, portName, 115200);
+   port.bufferUntil('\n');
+   
+   
+   // Initialising Paddles
+   leftPaddleY = height/2;
+   rightPaddleY = height/2;
+   serve = 0;
+   reset = 0;
+   
+   rightPaddleX = width - 50;
+   leftPaddleX = 50;
+   
+   noStroke();
+   
+   
+   // Initialising ball
+   ballXPos = width/2;
+   ballYPos = height/2;
  
 }
 
@@ -83,4 +111,44 @@ void draw() {
   
   rect(leftPaddleX, leftPaddleY, paddleWidth, paddleHeight);
 
+  animateBall();
+  resetBall();
+}
+
+
+void animateBall() {
+  if (ballXDir < 0) {
+    if (ballXPos <= leftPaddleX) {
+      if (ballYPos > leftPaddleY) && (ballYPos < (leftPaddleY + paddleHeight)) {
+        
+        ballXDir = -ballXDir;
+    }
+  }
+  
+  else if (ballXDir > 0) {
+    if (ballXPos >= rightPaddleX) {
+      if (ballYPos > rightPaddleY) && (ballYPos < (rightPaddleY + paddleHeight)) {
+        
+        ballXDir = -ballXDir;
+    }
+  }
+  
+  if (ballXPos < 0) resetBall();
+  if (ballXPos > width) resetBall();
+  
+  if (ballXPos - ballSize <=0) || (ballXPos + ballSize >= height) ballYDir = - ballYDir;
+  
+  ballXPos = ballXPos + ballXDir;
+  ballYPos = ballYPos + ballYDir;
+  
+  //println("LeftY: " + leftPaddleY);
+  //println("LeftX: " + leftPaddleX);
+  
+  rect(ballXPos , ballYPos, ballSize, ballSize);
+}
+
+
+void resetBall() {
+  ballXPos = width/2;
+  ballYPos = height/2;
 }

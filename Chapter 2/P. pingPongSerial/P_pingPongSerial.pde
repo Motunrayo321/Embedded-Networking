@@ -30,6 +30,8 @@ boolean ballInMotion = false;
 int player1 = 0;
 int player2 = 0;
 
+int fontSize = 36;
+
 
 // Port Values
 Serial port;
@@ -64,6 +66,11 @@ void setup() {
    // Initialising ball
    ballXPos = width/2;
    ballYPos = height/2;
+   
+   
+   // Initialising player scores
+   PFont font = createFont(PFont.list()[2], fontSize);
+   textFont(font);
  
 }
 
@@ -101,42 +108,56 @@ void draw() {
   background(#044f6f);
   fill(#ffffff);
   
-  /*
-  if (result != null) {
-  text(result, 10, height/2);
-  }
-  */
   
   rect(rightPaddleX, rightPaddleY, paddleWidth, paddleHeight);
   
   rect(leftPaddleX, leftPaddleY, paddleWidth, paddleHeight);
 
-  animateBall();
-  resetBall();
+  if (ballInMotion == true) animateBall();
+  if (serve == 1) ballInMotion = true;
+  
+  if (reset == 1) {
+    ballInMotion = false;
+    resetBall();
+    
+    player1 = 0;
+    player2 = 0;
+  }
+  
+  text (player1, fontSize, fontSize);
+  text (player2, width-fontSize, fontSize);
 }
 
 
 void animateBall() {
   if (ballXDir < 0) {
     if (ballXPos <= leftPaddleX) {
-      if (ballYPos > leftPaddleY) && (ballYPos < (leftPaddleY + paddleHeight)) {
+      if ((leftPaddleY <= ballYPos)  && (ballYPos <= leftPaddleY + paddleHeight)) {
         
         ballXDir = -ballXDir;
+      }
     }
   }
   
   else if (ballXDir > 0) {
     if (ballXPos >= rightPaddleX) {
-      if (ballYPos > rightPaddleY) && (ballYPos < (rightPaddleY + paddleHeight)) {
+      if ((rightPaddleY <= ballYPos) && (ballYPos <= rightPaddleY + paddleHeight)) {
         
         ballXDir = -ballXDir;
+      }
     }
   }
   
-  if (ballXPos < 0) resetBall();
-  if (ballXPos > width) resetBall();
+  if (ballXPos < 0) {
+    player2 ++;
+    resetBall();
+  }
+  if (ballXPos > width) {
+    player1 ++;
+    resetBall();
+  }
   
-  if (ballXPos - ballSize <=0) || (ballXPos + ballSize >= height) ballYDir = - ballYDir;
+  if ((ballXPos - ballSize/2 <=0) || (ballXPos + ballSize/2 >= height)) ballYDir = -ballYDir;
   
   ballXPos = ballXPos + ballXDir;
   ballYPos = ballYPos + ballYDir;

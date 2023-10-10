@@ -130,9 +130,10 @@ void draw() {
 
 
 void animateBall() {
+  
   if (ballXDir < 0) {
     if (ballXPos <= leftPaddleX) {
-      if ((leftPaddleY <= ballYPos)  && (ballYPos <= leftPaddleY + paddleHeight)) {
+      if ((leftPaddleY - (paddleHeight/2) <= ballYPos)  && (ballYPos <= leftPaddleY + (paddleHeight/2))) {
         
         ballXDir = -ballXDir;
       }
@@ -140,8 +141,8 @@ void animateBall() {
   }
   
   else if (ballXDir > 0) {
-    if (ballXPos >= rightPaddleX) {
-      if ((rightPaddleY <= ballYPos) && (ballYPos <= rightPaddleY + paddleHeight)) {
+    if (ballXPos >= (rightPaddleX + (ballSize/2))) {
+      if ((rightPaddleY - (paddleHeight/2) <= ballYPos)  && (ballYPos <= rightPaddleY + (paddleHeight/2))) {
         
         ballXDir = -ballXDir;
       }

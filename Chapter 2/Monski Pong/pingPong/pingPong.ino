@@ -13,30 +13,37 @@ int leftValue;
 
 void setup() {
   Serial.begin(115200);
+
+  If (Serial.available() <= 0) {
+    Serial.println("Hello");  // Sends dummy values to Processing so serialEvent can be called
+  }
 }
 
 void loop() {
-  // Read sensor values
-  serveValue = digitalRead(SERVE);
-  resetValue = digitalRead(RESET);
 
-  rightValue = analogRead(right);
-  leftValue = analogRead(left);
+  if (Serial.available() > 0) { // Checks if Processing is clear to receive data {receives return line dummy value}
+    // Read sensor values
+    serveValue = digitalRead(SERVE);
+    resetValue = digitalRead(RESET);
 
-/*
-  Serial.print("Serve: ");   Serial.print(serveValue);   Serial.print("\t"); 
-  Serial.print("Reset: ");   Serial.print(resetValue);   Serial.print("\t"); 
+    rightValue = analogRead(right);
+    leftValue = analogRead(left);
 
-  Serial.print("Right: ");   Serial.print(rightValue);   Serial.print("\t"); 
-  Serial.print("Left: ");   Serial.println(leftValue);
-*/
+  /*
+    Serial.print("Serve: ");   Serial.print(serveValue);   Serial.print("\t"); 
+    Serial.print("Reset: ");   Serial.print(resetValue);   Serial.print("\t"); 
 
-  // Print comma-separated values to serial port
-  Serial.print(rightValue); Serial.print(',');
-  Serial.print(leftValue); Serial.print(',');
-  Serial.print(serveValue); Serial.print(',');
-  Serial.println(resetValue);
+    Serial.print("Right: ");   Serial.print(rightValue);   Serial.print("\t"); 
+    Serial.print("Left: ");   Serial.println(leftValue);
+  */
+
+    // Print comma-separated values to serial port
+    Serial.print(rightValue); Serial.print(',');
+    Serial.print(leftValue); Serial.print(',');
+    Serial.print(serveValue); Serial.print(',');
+    Serial.println(resetValue);
 
 
-  delay(200);
+    delay(200);
+  }
 }

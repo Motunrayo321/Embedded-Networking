@@ -90,29 +90,32 @@ void setup() {
 void serialEvent(Serial port) {
  String input = port.readStringUntil('\n');  // Read characters in buffer
  
- input = trim(input);  // Remove carriage return and line feed
- result = "";  // Clear output string
- 
- //left, right, reset, serve = c.split(',');
- int sensors[] = int(split(input, ','));  // Split comma separated values and add to list
- 
- if (sensors.length == 4) {
-   leftPaddleY = map(sensors[0], leftMin, leftMax, 0, height);  // Map and assign sensor values to paddle variable
-   leftPaddleY = constrain(leftPaddleY, 0, height-50);  // Make sure paddle stays within window (otherwise, it goes out)
+ if (',' in input) {
+   input = trim(input);  // Remove carriage return and line feed
+   result = "";  // Clear output string
    
-   rightPaddleY = map(sensors[1], rightMin, rightMax, 0, height);
-   rightPaddleY = constrain(rightPaddleY, 0, height-50);
-
-   serve = sensors[2];  // Assign sensor values
-   reset = sensors[3];
+   //left, right, reset, serve = c.split(',');
+   int sensors[] = int(split(input, ','));  // Split comma separated values and add to list
    
- }
- 
- 
- for (int sensor = 0; sensor < sensors.length; sensor++) {
-  result += "Sensor " + sensor + ": " + sensors[sensor] + '\t';  // Add sensor values to string to print out
+   if (sensors.length == 4) {
+     leftPaddleY = map(sensors[0], leftMin, leftMax, 0, height);  // Map and assign sensor values to paddle variable
+     leftPaddleY = constrain(leftPaddleY, 0, height-50);  // Make sure paddle stays within window (otherwise, it goes out)
+     
+     rightPaddleY = map(sensors[1], rightMin, rightMax, 0, height);
+     rightPaddleY = constrain(rightPaddleY, 0, height-50);
+  
+     serve = sensors[2];  // Assign sensor values
+     reset = sensors[3];
+     
+     println('\r');  // Sends dummy value to Arduino to notify it that it's ready to receive data
+   }
+   
+   
+   for (int sensor = 0; sensor < sensors.length; sensor++) {
+    result += "Sensor " + sensor + ": " + sensors[sensor] + '\t';  // Add sensor values to string to print out
+    }
+    println(result);  // Print sensor values in string
   }
-  println(result);  // Print sensor values in string
 }
 
 
